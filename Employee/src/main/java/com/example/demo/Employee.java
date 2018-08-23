@@ -1,10 +1,19 @@
 package com.example.demo;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "employee")
@@ -17,19 +26,33 @@ public class Employee {
 
 	private String name;
 
-	private long companyId;
+	// foreign key
+	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "company_id", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonIgnore
+	private Company company;
 
 	// constructors
 	public Employee() {
 
 	}
 
-	public Employee(String name, long companyId) {
+	public Employee(String name, @NotNull Company company) {
 		this.name = name;
-		this.companyId = companyId;
+		this.company = company;
 	}
 
-	// getter and setter
+	// getters and setters
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
+	
 	public long getId() {
 		return id;
 	}
@@ -46,58 +69,14 @@ public class Employee {
 		this.name = name;
 	}
 
-	public long getCompanyId() {
-		return companyId;
-	}
-
-	public void setCompanyId(int companyId) {
-		this.companyId = companyId;
-	}
 	
 	// to string method
+	
 	@Override
 	public String toString() {
-		return "Employee [id=" + id + ", name=" + name + ", companyId=" + companyId + "]";
+		return "Employee [id=" + id + ", name=" + name + ", company=" + company + "]";
 	}
 
-//	@RequestMapping("")
-//
-//	@ResponseBody
-//
-//	public String createSong(String name, Long artistId) {
-//
-//		try {
-//
-//			// 1. Try to get the artist from the db
-//
-//			Artist artist = artistDao.findById(artistId).orElse(null);
-//
-//			if (artist == null) {
-//
-//				// write the logic to create a new artst
-//
-//				return "Cannot find an artist with that id: " + artistId.toString();
-//
-//			}
-//
-//			// 2. Create a new Song object
-//
-//			Song s = new Song(name, artist);
-//
-//			// 3. Save the Song object
-//
-//			this.songDb.save(s);
-//
-//			return "New song created :" + s.toString();
-//
-//		} catch (Exception ex) {
-//
-//			ex.printStackTrace();
-//
-//			return null;
-//
-//		}
-//
-//	}
+	
 
 }
