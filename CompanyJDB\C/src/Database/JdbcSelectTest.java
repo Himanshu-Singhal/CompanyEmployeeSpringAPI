@@ -6,13 +6,13 @@ import java.sql.*; // Use 'Connection', 'Statement' and 'ResultSet' classes in j
 public class JdbcSelectTest { // Save as "JdbcSelectTest.java"
 	public static void main(String[] args) {
 		try (
-				// Step 1: Allocate a database 'Connection' object
-				Connection conn = DriverManager.getConnection(
-				// MySQL: "jdbc:mysql://hostname:port/databaseName", "username", "password"
-				"jdbc:mysql://localhost:3306/companymanagement?useSSL=false&serverTimezone=EST", "root", "");
+			// Step 1: Allocate a database 'Connection' object
+			Connection conn = DriverManager.getConnection(
+					// MySQL: "jdbc:mysql://hostname:port/databaseName", "username", "password"
+					"jdbc:mysql://localhost:3306/companymanagement?useSSL=false&serverTimezone=EST", "root", "");
 
-				// Step 2: Allocate a 'Statement' object in the Connection
-				Statement stmt = conn.createStatement();) {
+			// Step 2: Allocate a 'Statement' object in the Connection
+			Statement stmt = conn.createStatement();) {
 			// Step 3: Execute a SQL SELECT query, the query result
 			// is returned in a 'ResultSet' object.
 			String strSelect = "SELECT employee.name,company.name FROM `employee` INNER JOIN company ON employee.companyid = company.id;";
