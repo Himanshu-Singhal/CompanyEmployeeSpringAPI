@@ -168,16 +168,18 @@ public class MainController {
 	// API End point: http://localhost:8080/createcompany/name=___
 	@PostMapping("/company")
 	@ResponseBody
-	public String CreateCompany(String name) {
+	public Company CreateCompany(String name) {
 
 		try {
 			Company x = new Company(name);
 			companyDao.save(x);
-			return "Created New Company" + x.toString();
+			//return "Created New Company" + x.toString();
+			return x;
 		}
 
 		catch (Exception ex) {
-			return "Error Creating New Company:" + ex.toString();
+			//return "Error Creating New Company:" + ex.toString();
+			return null;
 		}
 
 	}
@@ -227,14 +229,15 @@ public class MainController {
 	// API End point: http://localhost:8080/updatecompany?id=_______&name=_______
 	@PutMapping("/company/{id}")
 	@ResponseBody
-	public String UpdateCompany(@PathVariable("id") Long id, String name) {
+	public Company UpdateCompany(@PathVariable("id") Long id, String name) {
 
 		try {
 
 			Company x = companyDao.findById(id).orElse(null);
 
 			if (x == null) {
-				return "cannot find an comapany with id " + id.toString();
+				System.out.println("cannot find an comapany with id " + id.toString());
+				return x;
 			}
 
 			// update the field use setter function
@@ -243,10 +246,14 @@ public class MainController {
 			// save the updated object
 			companyDao.save(x);
 
-			return "updated company" + x.toString();
-
+			System.out.println("updated company" + x.toString());
+			return x;
+			
+			
 		} catch (Exception ex) {
-			return "Error Updating the company:" + ex.toString();
+			ex.printStackTrace();
+			//return "Error Updating the company:" + ex.toString();
+			return null;
 		}
 	}
 
@@ -271,17 +278,18 @@ public class MainController {
 	
 	@RequestMapping("/company/{id}")		// DYNAMIC URL
 	@ResponseBody
-	public String selectCompany(@PathVariable("id") Long id) {
+	public Company selectCompany(@PathVariable("id") Long id) {
 		try {
 			Company x = companyDao.findById(id).orElse(null);
 			String g = x.getName();
 			
-			return "found  Company: " + g;
+			return x;	 // return the Company object
 		}
 
 		catch (Exception ex) {
 			ex.printStackTrace();
-			return "Error Selecting Company: " + ex.toString();
+			//return "Error Selecting Company: " + ex.toString();
+			return null;
 		}
 
 	}
