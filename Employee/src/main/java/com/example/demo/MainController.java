@@ -2,6 +2,9 @@ package com.example.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -14,18 +17,14 @@ public class MainController {
 	@Autowired
 	private CompanyRepository companyDao;
 
-
-
-	
 	// ------------------------------------------------
-	
-	
+
 	// SQL Query Running Behind :
 	// DELETE FROM employee
 	// WHERE id = ________;
 
 	// API End point: http://localhost:8080/deleteemployee/id=_____
-	@RequestMapping("/deleteemployee")
+	@RequestMapping("/employee/delete")
 	@ResponseBody
 	public String deleteEmployee(Long id) {
 
@@ -104,12 +103,12 @@ public class MainController {
 
 	}
 
-	
 	// SQL Query Running Behind :
 	// UPDATE Employee SET NAME = ______
 	// WHERE ID = _______;
 
-	// API End point: http://localhost:8080/createemployee/employeeName=______&companyId=______
+	// API End point:
+	// http://localhost:8080/createemployee/employeeName=______&companyId=______
 	@RequestMapping("/createemployee")
 	@ResponseBody
 	public String CreateEmployee(String employeeName, Long companyId) {
@@ -125,17 +124,15 @@ public class MainController {
 				// 1b. if no company is found, then exit
 				return "No company with id: " + companyId + ". Exiting!";
 			}
-			
-			
+
 			// 2. Create a new Employee object using the company & employeeName
 			Employee e = new Employee(employeeName, c);
-
 
 			// 3. Save employee to database
 			this.employeeDao.save(e);
 
 			return "New Employee created :" + e.toString();
-			
+
 		} catch (Exception ex) {
 
 			ex.printStackTrace();
@@ -146,14 +143,12 @@ public class MainController {
 
 	}
 
-
-	
 	// SQL Query Running Behind :
 	// SELECT employee.name, company.name
-	// FROM employee 
-	// INNER JOIN employee.company_id = company.id 
-	// 
-	
+	// FROM employee
+	// INNER JOIN employee.company_id = company.id
+	//
+
 	// API End point: http://localhost:8080/selectemployeebycompany
 	@RequestMapping("/selectemployeebycompany")
 	@ResponseBody
@@ -163,18 +158,14 @@ public class MainController {
 
 	}
 
-
-	
-	
 	// ------------------------------------------------
-	
-	
+
 	// SQL Query Running Behind :
 	// INSERT INTO company (name)
 	// VALUES ('_________');
 
 	// API End point: http://localhost:8080/createcompany/name=___
-	@RequestMapping("/createcompany")
+	@PostMapping("/create/company")
 	@ResponseBody
 	public String CreateCompany(String name) {
 
@@ -195,7 +186,7 @@ public class MainController {
 	// WHERE id = ________
 
 	// API End point: http://localhost:8080/deletecompany/id=______
-	@RequestMapping("/deletecompany")
+	@DeleteMapping("/delete/company/id")
 	@ResponseBody
 	public String DeleteCompany(Long id) {
 
@@ -214,7 +205,7 @@ public class MainController {
 	// DELETE * FROM company;
 
 	// API End point: http://localhost:8080/deleteallcompany/
-	@RequestMapping("/deleteallcompany")
+	@DeleteMapping("/delete/company/all")
 	@ResponseBody
 	public String DeleteAllCompany() {
 		try {
@@ -233,7 +224,7 @@ public class MainController {
 	// WHERE id = _____;
 
 	// API End point: http://localhost:8080/updatecompany?id=_______&name=_______
-	@RequestMapping("/updatecompany")
+	@PutMapping("/update/company/id")
 	@ResponseBody
 	public String UpdateCompany(Long id, String name) {
 
@@ -262,12 +253,34 @@ public class MainController {
 	// SELECT * FROM company;
 
 	// API End point: http://localhost:8080/selectallcompany/Id=______
-	@RequestMapping("/selectallcompany")
+	@RequestMapping("/select/company/all")
 	@ResponseBody
 	public Iterable<Company> getAllCompanies() {
 		return companyDao.findAll();
 
 	}
+	
+	
+	
 
+	// SQL Query Running Behind :
+	// SELECT name FROM company
+	// where id = ________;
+
+	@RequestMapping("/select/company/id")
+	@ResponseBody
+	public String selectCompany(Long id) {
+		try {
+			Company x = companyDao.findById(id).orElse(null);
+			String g = x.getName();
+			
+			return "found  Company: " + g;
+		}
+
+		catch (Exception ex) {
+			return "Error Creating New Company:" + ex.toString();
+		}
+
+	}
 
 }
