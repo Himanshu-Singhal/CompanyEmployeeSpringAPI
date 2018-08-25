@@ -3,6 +3,7 @@ package com.example.demo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,10 +24,10 @@ public class MainController {
 	// DELETE FROM employee
 	// WHERE id = ________;
 
-	// API End point: http://localhost:8080/deleteemployee/id=_____
-	@RequestMapping("/employee/delete")
+	// API End point: http://localhost:8080/employee/25
+	@DeleteMapping("/employee/{id}")
 	@ResponseBody
-	public String deleteEmployee(Long id) {
+	public String deleteEmployee(@PathVariable("id") Long id) {
 
 		try {
 			// delete by id . id comes from parameter needs to be long
@@ -44,8 +45,8 @@ public class MainController {
 	// SQL Query Running Behind :
 	// DELETE * FROM employee;
 
-	// API End point: http://localhost:8080/deleteallemployee/
-	@RequestMapping("/deleteallemployee")
+	// API End point: http://localhost:8080/employee/
+	@DeleteMapping("/employee")
 	@ResponseBody
 	public String DeleteAllEmployee() {
 
@@ -65,10 +66,10 @@ public class MainController {
 	// SET NAME = ______
 	// WHERE id = _______ ;
 
-	// API End point: http://localhost:8080/updateemployee/id=___&name=______
-	@RequestMapping("/updateemployee")
+	// API End point: http://localhost:8080/employee/id=25
+	@PutMapping("/employee/{id}")
 	@ResponseBody
-	public String UpdateEmployee(Long id, String name) {
+	public String UpdateEmployee(@PathVariable("id") Long id, String name) {
 
 		try {
 
@@ -95,8 +96,8 @@ public class MainController {
 	// SQL Query Running Behind :
 	// SELECT * from employee
 
-	// API End point: http://localhost:8080/selectallemployees/
-	@RequestMapping("/selectallemployees")
+	// API End point: http://localhost:8080/employees/
+	@RequestMapping("/employees")
 	@ResponseBody
 	public Iterable<Employee> getAllEmployees() {
 		return employeeDao.findAll();
@@ -108,8 +109,8 @@ public class MainController {
 	// WHERE ID = _______;
 
 	// API End point:
-	// http://localhost:8080/createemployee/employeeName=______&companyId=______
-	@RequestMapping("/createemployee")
+	// http://localhost:8080/createemployee/employee
+	@PutMapping("/employee")
 	@ResponseBody
 	public String CreateEmployee(String employeeName, Long companyId) {
 
@@ -150,9 +151,9 @@ public class MainController {
 	//
 
 	// API End point: http://localhost:8080/selectemployeebycompany
-	@RequestMapping("/selectemployeebycompany")
+	@RequestMapping("employee/{id")
 	@ResponseBody
-	public String selectAllEmployees(Long id) {
+	public String selectAllEmployees(@PathVariable("id") Long id) {
 
 		return "todo!";
 
@@ -165,7 +166,7 @@ public class MainController {
 	// VALUES ('_________');
 
 	// API End point: http://localhost:8080/createcompany/name=___
-	@PostMapping("/create/company")
+	@PostMapping("/company")
 	@ResponseBody
 	public String CreateCompany(String name) {
 
@@ -186,9 +187,9 @@ public class MainController {
 	// WHERE id = ________
 
 	// API End point: http://localhost:8080/deletecompany/id=______
-	@DeleteMapping("/delete/company/id")
+	@DeleteMapping("/company/{id}")
 	@ResponseBody
-	public String DeleteCompany(Long id) {
+	public String DeleteCompany(@PathVariable("id") Long id) {
 
 		try {
 			companyDao.deleteById(id);
@@ -197,7 +198,7 @@ public class MainController {
 		}
 
 		catch (Exception ex) {
-			return "Error creating new company:" + ex.toString();
+			return "Error Deleting company:" + ex.toString();
 		}
 	}
 
@@ -205,7 +206,7 @@ public class MainController {
 	// DELETE * FROM company;
 
 	// API End point: http://localhost:8080/deleteallcompany/
-	@DeleteMapping("/delete/company/all")
+	@DeleteMapping("/company")
 	@ResponseBody
 	public String DeleteAllCompany() {
 		try {
@@ -224,9 +225,9 @@ public class MainController {
 	// WHERE id = _____;
 
 	// API End point: http://localhost:8080/updatecompany?id=_______&name=_______
-	@PutMapping("/update/company/id")
+	@PutMapping("/company/{id}")
 	@ResponseBody
-	public String UpdateCompany(Long id, String name) {
+	public String UpdateCompany(@PathVariable("id") Long id, String name) {
 
 		try {
 
@@ -253,7 +254,8 @@ public class MainController {
 	// SELECT * FROM company;
 
 	// API End point: http://localhost:8080/selectallcompany/Id=______
-	@RequestMapping("/select/company/all")
+	//@RequestMapping("/select/company/all")
+	@RequestMapping("/company")
 	@ResponseBody
 	public Iterable<Company> getAllCompanies() {
 		return companyDao.findAll();
@@ -266,10 +268,10 @@ public class MainController {
 	// SQL Query Running Behind :
 	// SELECT name FROM company
 	// where id = ________;
-
-	@RequestMapping("/select/company/id")
+	
+	@RequestMapping("/company/{id}")		// DYNAMIC URL
 	@ResponseBody
-	public String selectCompany(Long id) {
+	public String selectCompany(@PathVariable("id") Long id) {
 		try {
 			Company x = companyDao.findById(id).orElse(null);
 			String g = x.getName();
@@ -278,7 +280,8 @@ public class MainController {
 		}
 
 		catch (Exception ex) {
-			return "Error Creating New Company:" + ex.toString();
+			ex.printStackTrace();
+			return "Error Selecting Company: " + ex.toString();
 		}
 
 	}
